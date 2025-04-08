@@ -49,6 +49,15 @@ const messages = defineMessages({
     id: 'Register',
     defaultMessage: 'Register',
   },
+  emailFormatErrorTitle: {
+    id: 'Invalid email format',
+    defaultMessage: 'Invalid email format',
+  },
+  emailFormatErrorCompleteBody: {
+    id: 'The email format you entered is wrong, Please enter the correct email',
+    defaultMessage:
+      'The email format you entered is wrong, Please enter the correct email',
+  },
 });
 const useUsers = () => {
   const error = useSelector((state) => state.users.create.error);
@@ -81,6 +90,17 @@ const Register = () => {
 
   const onSubmit = (data) => {
     const { fullname, email } = data;
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!isValidEmail) {
+      toast.error(
+        <Toast
+          error
+          title={intl.formatMessage(messages.emailFormatErrorTitle)}
+          content={intl.formatMessage(messages.emailFormatErrorCompleteBody)}
+        />,
+      );
+      return;
+    }
     dispatch(
       createUser({
         fullname: fullname,
